@@ -1,0 +1,29 @@
+{
+    "name": "mediahub-server",
+    "version": "1.0.0",
+    "description": "Social Media Platform for Connecting People",
+    "main": "server.js",
+    "scripts": {
+        "test": "NA",
+        "start": "cls && nodemon ./src/server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ShivharakhYadav/MediaHub-Server.git"
+    },
+    "keywords": [
+        "#NA"
+    ],
+    "author": "Shivharakh Yadav",
+    "license": "UNLICENSED",
+    "bugs": {
+        "url": "https://github.com/ShivharakhYadav/MediaHub-Server/issues"
+    },
+    "homepage": "https://github.com/ShivharakhYadav/MediaHub-Server#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "mongoose": "^7.6.1"
+    }
+}
