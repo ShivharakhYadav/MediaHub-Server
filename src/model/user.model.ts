@@ -1,9 +1,10 @@
-const { Schema, model } = require("mongoose");
+import { Schema, model } from "mongoose";
 const Types = Schema.Types;
+
 const userSchema = new Schema({
     name: {
         type: Types.String,
-        required: [true, "name is required"]
+        // required: [true, "name is required"]
     },
     username: {
         type: Types.String,
@@ -14,7 +15,12 @@ const userSchema = new Schema({
         type: Types.String,
         // unique: [true, "{VALUE} Already Used"],
         required: [true, "email is Required"]
+    },
+    password: {
+        type: Types.String,
+        // unique: [true, "{VALUE} Already Used"],
+        required: [true, "password is Required"]
     }
 })
 
-module.exports = model("users", userSchema);
+export default model("users", userSchema);

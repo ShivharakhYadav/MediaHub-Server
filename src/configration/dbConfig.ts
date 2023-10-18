@@ -1,14 +1,14 @@
 require("dotenv").config();
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const dbConfig = async () => {
     const url = process.env.url;
-    await mongoose.connect(url)
+    await mongoose.connect(url as string)
         .then(() => {
             console.log("Database Connected Successfully")
-        }).catch((error) => {
+        }).catch((error: any) => {
             console.log("Database Connection Failed", error.message)
         })
 }
 
-module.exports = dbConfig;
+export default dbConfig;

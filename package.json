@@ -5,7 +5,7 @@
     "main": "server.js",
     "scripts": {
         "test": "NA",
-        "start": "cls && nodemon ./src/server.js"
+        "start": "cls && nodemon ./src/server.ts"
     },
     "repository": {
         "type": "git",
@@ -21,9 +21,17 @@
     },
     "homepage": "https://github.com/ShivharakhYadav/MediaHub-Server#readme",
     "dependencies": {
+        "@types/express": "^4.17.20",
+        "@types/node": "^20.8.7",
         "cors": "^2.8.5",
         "dotenv": "^16.3.1",
         "express": "^4.18.2",
-        "mongoose": "^7.6.1"
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^7.6.1",
+        "nodemon": "^3.0.1",
+        "ts-node": "^10.9.1"
+    },
+    "devDependencies": {
+        "@types/jsonwebtoken": "^9.0.4"
     }
 }
