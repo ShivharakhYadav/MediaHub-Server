@@ -32,7 +32,7 @@ const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
 
-        if (!email) return ErrorResponse(res, 404, "authId not found");
+        if (!email) return ErrorResponse(res, 404, "email not found");
         if (!password) return ErrorResponse(res, 404, "password not found");
 
         const user = await users.findOne({ $and: [{ email: email }, { password: password }] }, { password: 0, __v: 0 });
