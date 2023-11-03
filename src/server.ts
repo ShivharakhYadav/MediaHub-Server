@@ -1,6 +1,6 @@
 import express from 'express';
 import dbConfig from './configration/dbConfig';
-import authRoutes from './routes/authRoutes';
+import authRoutes from './routes/auth.routes';
 import { environmentConfig } from "./constants/index";
 import { Request, Response } from 'express'
 const app = express();

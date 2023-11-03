@@ -40,19 +40,19 @@ const login = async (req: Request, res: Response) => {
         if (!user) return ErrorResponse(res, 401, "Unauthorized");
 
         let body = {
-            // Convert the Mongoose document to a plain JavaScript object
-            ...user.toObject(),
-            accessToken: "",
-            refreshToken: "",
+            id: user._id,
+            email: email
         }
         const accessToken = generateAccessToken(body)
         const refreshToken = generateRefreshToken(body)
 
         if (accessToken != null && refreshToken != null) {
-            body["accessToken"] = accessToken;
-            body["refreshToken"] = refreshToken;
-
-            return SuccessResponse(res, body, "")
+            //Reponse to be send
+            let obj = {
+                accessToken: accessToken,
+                refreshToken: refreshToken
+            }
+            return SuccessResponse(res, obj, "Login Successfull")
         }
         else {
             return ErrorResponse(res, 403, "Token Generation Failed");
