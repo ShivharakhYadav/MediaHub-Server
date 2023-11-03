@@ -19,58 +19,60 @@ const register = async (req: Request, res: Response) => {
         if (users && users.isVerified) {
             return ErrorResponse(res, 409, 'User already exist..!')
         }
-        else if (users && !users.isVerified) {
-            const verificationCode = await otpGenerator();
 
-            //Generating ExpireTime
-            const currentDate = new Date();
-            const expiresIn = new Date();
-            expiresIn.setMinutes(currentDate.getMinutes() + constant.OTP_EXPIRE_TIME)
+        // else if (users && !users.isVerified) {
+        //     const verificationCode = await otpGenerator();
 
-            //Sending Email
-            let emailSent = await sendMail(email, verificationCode);
+        //     //Generating ExpireTime
+        //     const currentDate = new Date();
+        //     const expiresIn = new Date();
+        //     expiresIn.setMinutes(currentDate.getMinutes() + constant.OTP_EXPIRE_TIME)
 
-            if (emailSent) {
-                const otpObj = { verificationCode: verificationCode, expiresIn: expiresIn.getTime() }
-                console.log("otpObj 1-->", otpObj)
-                await Users.findOneAndUpdate({ email: email }, { verification: otpObj });
+        //     //Sending Email
+        //     let emailSent = await sendMail(email, verificationCode);
 
-                return ErrorResponse(res, 403, 'Verify OTP with Email')
-            } else {
-                return ErrorResponse(res, 500, 'Email Generation Failed')
-            }
-        }
-        else {
-            const newuser: any = await Users.create({
-                email,
-                password: password,
-                username: username
-            });
+        //     if (emailSent) {
+        //         const otpObj = { verificationCode: verificationCode, expiresIn: expiresIn.getTime() }
+        //         console.log("otpObj 1-->", otpObj)
+        //         await Users.findOneAndUpdate({ email: email }, { verification: otpObj });
 
-            if (!newuser) {
-                return InternalError(res);
-            } else {
-                const verificationCode = await otpGenerator();
+        //         return ErrorResponse(res, 403, 'Verify OTP with Email')
+        //     } else {
+        //         return ErrorResponse(res, 500, 'Email Generation Failed')
+        //     }
+        // }
+        // else {
+        const newuser: any = await Users.create({
+            email,
+            password: password,
+            username: username
+        });
 
-                //Generating ExpireTime
-                const currentDate = new Date();
-                const expiresIn = new Date();
-                expiresIn.setMinutes(currentDate.getMinutes() + constant.OTP_EXPIRE_TIME)
+        return SuccessResponse(res, {}, "Register Successfully")
+        //     if (!newuser) {
+        //         return InternalError(res);
+        //     } else {
+        //         const verificationCode = await otpGenerator();
 
-                //Sending Email
-                let emailSent = await sendMail(email, verificationCode);
+        //         //Generating ExpireTime
+        //         const currentDate = new Date();
+        //         const expiresIn = new Date();
+        //         expiresIn.setMinutes(currentDate.getMinutes() + constant.OTP_EXPIRE_TIME)
 
-                if (emailSent) {
-                    const otpObj = { verificationCode: verificationCode, expiresIn: expiresIn.getTime() }
-                    console.log("otpObj 2-->", otpObj)
-                    await Users.findOneAndUpdate({ email: email }, { verification: otpObj });
+        //         //Sending Email
+        //         let emailSent = await sendMail(email, verificationCode);
 
-                    return ErrorResponse(res, 403, 'Verify OTP with Email')
-                } else {
-                    return ErrorResponse(res, 500, 'Email Generation Failed')
-                }
-            }
-        }
+        //         if (emailSent) {
+        //             const otpObj = { verificationCode: verificationCode, expiresIn: expiresIn.getTime() }
+        //             console.log("otpObj 2-->", otpObj)
+        //             await Users.findOneAndUpdate({ email: email }, { verification: otpObj });
+
+        //             return ErrorResponse(res, 403, 'Verify OTP with Email')
+        //         } else {
+        //             return ErrorResponse(res, 500, 'Email Generation Failed')
+        //         }
+        //     }
+        // }
     } catch (error: any) {
         console.log("register errr", error)
         return InternalError(res)
@@ -86,73 +88,57 @@ const login = async (req: Request, res: Response) => {
 
         const user = await Users.findOne({ $and: [{ email: email }, { password: password }] }, { password: 0, __v: 0 });
         // User Not Found
-        if (!user) return ErrorResponse(res, 401, "Unauthorized");
+        if (!user) return ErrorResponse(res, 401, "Unauthorized User");
 
-        if (!user.isVerified) {
-            const verificationCode = await otpGenerator();
+        // Enable for Email Verification (Line no. 93 - 115 and line no. 140)
 
-            //Generating ExpireTime
-            const currentDate = new Date();
-            const expiresIn = new Date();
-            expiresIn.setMinutes(currentDate.getMinutes() + constant.OTP_EXPIRE_TIME)
+        // if (!user.isVerified) {
+        //     const verificationCode = await otpGenerator();
 
-            //Sending Email
-            let emailSent = await sendMail(email, verificationCode);
-            // let emailSent = true
+        //     //Generating ExpireTime
+        //     const currentDate = new Date();
+        //     const expiresIn = new Date();
+        //     expiresIn.setMinutes(currentDate.getMinutes() + constant.OTP_EXPIRE_TIME)
 
-            if (emailSent) {
-                const otpObj = { verificationCode: verificationCode, expiresIn: expiresIn.getTime() }
-                console.log("otpObj 1-->", otpObj)
-                await Users.findOneAndUpdate({ email: email }, { verification: otpObj });
+        //     //Sending Email
+        //     let emailSent = await sendMail(email, verificationCode);
+        //     // let emailSent = true
 
-                return ErrorResponse(res, 403, 'Verify OTP with Email')
-            } else {
-                return ErrorResponse(res, 500, 'Email Generation Failed')
-            }
-        }
-        else {
+        //     if (emailSent) {
+        //         const otpObj = { verificationCode: verificationCode, expiresIn: expiresIn.getTime() }
+        //         console.log("otpObj 1-->", otpObj)
+        //         await Users.findOneAndUpdate({ email: email }, { verification: otpObj });
 
-            let body: any = {
-                _id: user?._id,
-                email: user?.email
-            }
-
-            if (user?.verification) {
-                user.verification = undefined;
-                await user.save()
-            }
-
-            const accessToken = generateAccessToken(body)
-            const refreshToken = generateRefreshToken(body)
-
-            if (accessToken != null && refreshToken != null) {
-                body["accessToken"] = accessToken;
-                body["refreshToken"] = refreshToken;
-
-                // res.cookie("refreshToken", refreshToken, { httpOnly: true });
-                return SuccessResponse(res, body, "")
-            }
-            else {
-                return ErrorResponse(res, 403, "Token Generation Failed");
-            }
-        }
-        // let body = {
-        //     id: user._id,
-        //     email: email
-        // }
-        // const accessToken = generateAccessToken(body)
-        // const refreshToken = generateRefreshToken(body)
-
-        // if (accessToken != null && refreshToken != null) {
-        //     //Reponse to be send
-        //     let obj = {
-        //         accessToken: accessToken,
-        //         refreshToken: refreshToken
+        //         return ErrorResponse(res, 403, 'Verify OTP with Email')
+        //     } else {
+        //         return ErrorResponse(res, 500, 'Email Generation Failed')
         //     }
-        //     return SuccessResponse(res, obj, "Login Successfull")
         // }
         // else {
-        //     return ErrorResponse(res, 403, "Token Generation Failed");
+
+        let body: any = {
+            _id: user?._id,
+            email: user?.email
+        }
+
+        if (user?.verification) {
+            user.verification = undefined;
+            await user.save()
+        }
+
+        const accessToken = generateAccessToken(body)
+        const refreshToken = generateRefreshToken(body)
+
+        if (accessToken != null && refreshToken != null) {
+            body["accessToken"] = accessToken;
+            body["refreshToken"] = refreshToken;
+
+            // res.cookie("refreshToken", refreshToken, { httpOnly: true });
+            return SuccessResponse(res, body, "")
+        }
+        else {
+            return ErrorResponse(res, 403, "Token Generation Failed");
+        }
         // }
     } catch (error) {
         console.log("login err", error)
