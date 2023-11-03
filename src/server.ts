@@ -3,6 +3,7 @@ import dbConfig from './configration/dbConfig';
 import authRoutes from './routes/auth.routes';
 import { environmentConfig } from "./constants/index";
 import { Request, Response } from 'express'
+import userRoutes from './routes/users.routes';
 const app = express();
 
 app.use(express.json())
@@ -14,6 +15,7 @@ app.use((req: Request, res: Response, next) => {
     next();
 })
 app.use("/auth", authRoutes);
+app.use("/user",userRoutes);
 
 const startMediHub = async () => {
     try {

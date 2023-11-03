@@ -14,10 +14,10 @@ const register = async (req: Request, res: Response) => {
         if (!password) return ErrorResponse(res, 404, "password not found");
         if (!username) return ErrorResponse(res, 404, "username not found");
 
-        const users = await Users.findOne({ email: email });
+        const user = await Users.findOne({ email: email });
 
         //Without Verifcation (19-30)
-        if (users) {
+        if (user) {
             return ErrorResponse(res, 409, 'User already exist..!')
         }
 
