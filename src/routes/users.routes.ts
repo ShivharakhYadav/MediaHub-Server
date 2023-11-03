@@ -4,6 +4,6 @@ import { verifyToken } from "../middleware/authMiddleware";
 
 const userRoutes = Router()
 
-userRoutes.post("/user/:id", verifyToken, getUserByID)
+userRoutes.get("/user/:id?", verifyToken, getUserByID)
 
 export default userRoutes;
