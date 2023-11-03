@@ -20,6 +20,15 @@ const userSchema = new Schema({
         type: Types.String,
         // unique: [true, "{VALUE} Already Used"],
         required: [true, "password is Required"]
+    },
+    refreshToken: String,
+    isVerified: {
+        type: Schema.Types.Boolean,
+        default: false,
+    },
+    verification: {
+        type: Schema.Types.Mixed,
+        required: false,
     }
 })
 
