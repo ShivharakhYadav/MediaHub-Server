@@ -16,10 +16,24 @@ const register = async (req: Request, res: Response) => {
 
         const users = await Users.findOne({ email: email });
 
-        if (users && users.isVerified) {
+        //Without Verifcation (19-30)
+        if (users) {
             return ErrorResponse(res, 409, 'User already exist..!')
         }
 
+        const newuser: any = await Users.create({
+            email,
+            password: password,
+            username: username
+        });
+
+        return SuccessResponse(res, {}, "Register SuccessFully");
+
+        //With Verifcation (33-87)
+
+        // if (users && users.isVerified) {
+        //     return ErrorResponse(res, 409, 'User already exist..!')
+        // }
         // else if (users && !users.isVerified) {
         //     const verificationCode = await otpGenerator();
 
@@ -42,13 +56,12 @@ const register = async (req: Request, res: Response) => {
         //     }
         // }
         // else {
-        const newuser: any = await Users.create({
-            email,
-            password: password,
-            username: username
-        });
+        //     const newuser: any = await Users.create({
+        //         email,
+        //         password: password,
+        //         username: username
+        //     });
 
-        return SuccessResponse(res, {}, "Register Successfully")
         //     if (!newuser) {
         //         return InternalError(res);
         //     } else {
@@ -73,6 +86,7 @@ const register = async (req: Request, res: Response) => {
         //         }
         //     }
         // }
+
     } catch (error: any) {
         console.log("register errr", error)
         return InternalError(res)
@@ -90,7 +104,7 @@ const login = async (req: Request, res: Response) => {
         // User Not Found
         if (!user) return ErrorResponse(res, 401, "Unauthorized User");
 
-        // Enable for Email Verification (Line no. 93 - 115 and line no. 140)
+        // Enable for Email Verification (Line no. 109 - 131 and line no. 138-141)
 
         // if (!user.isVerified) {
         //     const verificationCode = await otpGenerator();
@@ -121,10 +135,10 @@ const login = async (req: Request, res: Response) => {
             email: user?.email
         }
 
-        if (user?.verification) {
-            user.verification = undefined;
-            await user.save()
-        }
+        // if (user?.verification) {
+        //     user.verification = undefined;
+        //     await user.save()
+        // }
 
         const accessToken = generateAccessToken(body)
         const refreshToken = generateRefreshToken(body)
