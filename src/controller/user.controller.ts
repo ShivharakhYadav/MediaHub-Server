@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { ErrorResponse, SuccessResponse } from '../utils/response.handler';
 import { jwtDecode } from 'jwt-decode';
 
-export const getUserByID = async (req: Request, res: Response) => {
+export const getUserByID = async (req: any, res: Response) => {
     try {
         let allParams: Object = req?.params;
         let userId = req?.params?.id;
@@ -20,14 +20,11 @@ export const getUserByID = async (req: Request, res: Response) => {
             id = userId;
         }
 
-        let decoded: any = jwtDecode(token as string);
-        // console.log("decoded", decoded);
-
-        if (!decoded?._id) {
-            return ErrorResponse(res, 404, "params id not found")
+        if (!req._id) {
+            return ErrorResponse(res, 404, "id not found")
         }
         else {
-            id = decoded?._id;
+            id = req._id;
         }
 
         const user = await Users.findOne({ _id: userId }, { password: 0, __v: 0 })
