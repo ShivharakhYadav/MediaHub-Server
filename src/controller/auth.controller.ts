@@ -100,7 +100,7 @@ const login = async (req: Request, res: Response) => {
         if (!email) return ErrorResponse(res, 404, "email not found");
         if (!password) return ErrorResponse(res, 404, "password not found");
 
-        const user = await Users.findOne({ $and: [{ email: email }, { password: password }] }, { password: 0, __v: 0 });
+        const user = await Users.findOne({ $and: [{ email: email }, { password: password }] }, { password: 0, __v: 0, isVerified: 0 });
         // User Not Found
         if (!user) return ErrorResponse(res, 401, "Unauthorized User");
 
@@ -210,10 +210,25 @@ const verifyOTP = async (req: Request, res: Response) => {
     }
 }
 
+const refreshTokenByToken = async (req: Request, res: Response) => {
+    try {
+        console.log(req)
+        let body = req.body;
+        const accessToken = await generateAccessToken(body);
+        const refreshToken = await generateRefreshToken(body);
+
+        if (accessToken != null && refreshToken != null) {
+            body["accessToken"] = accessToken;
+            body["refreshToken"] = refreshToken;
+            return SuccessResponse(res, "", "");
+        }
+        return InternalError(res);
+    } catch (error) {
+        return InternalError(res);
+    }
+}
 
 
 
 
-
-
-export { register, login, verifyOTP }
+export { register, login, verifyOTP, refreshTokenByToken }
