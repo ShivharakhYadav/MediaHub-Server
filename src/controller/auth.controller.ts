@@ -212,7 +212,6 @@ const verifyOTP = async (req: Request, res: Response) => {
 
 const refreshTokenByToken = async (req: Request, res: Response) => {
     try {
-        console.log(req)
         let body = req.body;
         const accessToken = await generateAccessToken(body);
         const refreshToken = await generateRefreshToken(body);
@@ -220,7 +219,7 @@ const refreshTokenByToken = async (req: Request, res: Response) => {
         if (accessToken != null && refreshToken != null) {
             body["accessToken"] = accessToken;
             body["refreshToken"] = refreshToken;
-            return SuccessResponse(res, "", "");
+            return SuccessResponse(res, body, "");
         }
         return InternalError(res);
     } catch (error) {
