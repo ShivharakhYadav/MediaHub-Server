@@ -1,8 +1,9 @@
 require("dotenv").config();
 import mongoose from "mongoose";
+import { environmentConfig } from "../constants";
 
 const dbConfig = async () => {
-    const url = process.env.url;
+    const url = environmentConfig.MONGOOSE_URL;
     await mongoose.connect(url as string)
         .then(() => {
             console.log("Database Connected Successfully")
