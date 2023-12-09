@@ -3,7 +3,7 @@ import dbConfig from './configration/dbConfig';
 import authRoutes from './routes/auth.routes';
 import { environmentConfig } from "./constants/index";
 import { Request, Response } from 'express'
-import userRoutes from './routes/users.routes';
+import userRoutes from './routes/user.routes';
 const app = express();
 
 app.use(express.json())
