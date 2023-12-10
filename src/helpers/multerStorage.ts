@@ -4,7 +4,7 @@ const multerStorage = multer.diskStorage({
     destination: "./src/uploads",
     filename(req: any, file, callback) {
         console.log('file-->', file);
-        const userid = req.query.userid;
+        const userid = req.body.userid;
 
         //returning imageName
         const imageName = `${userid}-${Date.now()}-${file.originalname}`;
