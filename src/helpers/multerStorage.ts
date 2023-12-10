@@ -8,7 +8,7 @@ const multerStorage = multer.diskStorage({
 
         //returning imageName
         const imageName = `${userid}-${Date.now()}-${file.originalname}`;
-        req.uploadTime = Date.now();
+        req.body.uploadTime = Date.now();
         file.originalname = imageName;
         callback(null, imageName);
     },

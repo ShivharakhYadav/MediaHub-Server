@@ -1,10 +1,11 @@
 import { Schema, model } from "mongoose";
 
 const postSchema = new Schema({
-    username: String,
-    userid: String,
     postMedia: Array,
-    like: Number,
+    like: {
+        default: 0,
+        type: Number
+    },
     comment: Array,
     caption: String,
     location: String,

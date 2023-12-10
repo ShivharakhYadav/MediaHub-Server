@@ -1,24 +1,30 @@
 // const post = require('../../models/postSchema');
 // const User = require('../../models/userSchema');
 
-import multer from 'multer';
 
 import { Request, Response } from "express"
-import { InternalError } from "../utils/response.handler"
+import { InternalError, SuccessResponse } from "../utils/response.handler"
 import multerStorage from '../helpers/multerStorage';
+import multer from 'multer';
+import posts from "../model/post.model";
 
 export const newPost = (req: Request, res: Response) => {
     try {
-        const { postcount } = req.query as any;
-        // console.log("req-->", req);
-        var upload = multer({ storage: multerStorage }).array('img', postcount);
+        var upload = multer({ storage: multerStorage }).any();
         upload(req, res, async function (err) {
             if (err) {
                 return res.status(500).send(err);
             }
             else {
-                const { uploadTime } = req as any
-                console.log("req-->uploadTime", uploadTime)
+                req.body.postMedia = [];
+                if (req.files && Array.isArray(req.files)) {
+                    req.body.postMedia = req.files.map((file: any) => {
+                        const postType = file.mimetype.split('/')[0];
+                        return { name: file?.originalname, type: postType };
+                    });
+                }
+                await posts.create(req.body)
+                return SuccessResponse(res, {}, "");
             }
         })
 
