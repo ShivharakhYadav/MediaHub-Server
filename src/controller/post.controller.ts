@@ -1,7 +1,32 @@
 // const post = require('../../models/postSchema');
 // const User = require('../../models/userSchema');
-// const multer = require('multer');
-// const multerStorage = require('../../helper/multerStorage');
+
+import multer from 'multer';
+
+import { Request, Response } from "express"
+import { InternalError } from "../utils/response.handler"
+import multerStorage from '../helpers/multerStorage';
+
+export const newPost = (req: Request, res: Response) => {
+    try {
+        const { postcount } = req.query as any;
+        // console.log("req-->", req);
+        var upload = multer({ storage: multerStorage }).array('img', postcount);
+        upload(req, res, async function (err) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+            else {
+                const { uploadTime } = req as any
+                console.log("req-->uploadTime", uploadTime)
+            }
+        })
+
+        // res.st
+    } catch (error) {
+        return InternalError(res)
+    }
+}
 
 // let updatedData;
 // //Added watch on Post Database
@@ -75,6 +100,7 @@
 //                         postMedia: postMediaArray,
 //                         like: 0,
 //                     }
+
 
 //                     let body = req.body;
 
@@ -183,4 +209,6 @@
 //         return res.status(500).send('Server error')
 //     }
 // }
-// module.exports = { newPost, comment, reply, getPostByIds }
+
+
+
