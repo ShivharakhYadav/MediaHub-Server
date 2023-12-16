@@ -3,7 +3,6 @@ import multer from "multer";
 const multerStorage = multer.diskStorage({
     destination: "./src/uploads",
     filename(req: any, file, callback) {
-        console.log('file-->', file);
         const userid = req.body.userid;
 
         //returning imageName

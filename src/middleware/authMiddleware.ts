@@ -22,7 +22,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
       if (err && err?.message != "jwt expired") {
         return ErrorResponse(res, 401, "Invalid Token");
       }
-      console.log("Decoded Payload", payload);
+      // console.log("Decoded Payload", payload);
       
       if (payload) {
         let body: any = {

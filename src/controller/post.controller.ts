@@ -10,19 +10,17 @@ import posts from "../model/post.model";
 
 export const newPost = (req: Request, res: Response) => {
     try {
-        console.log("req,body", req.body)
-
-
         var upload = multer({ storage: multerStorage }).any();
         upload(req, res, async function (err) {
             if (err) {
+                console.log("Upload failed", err)
                 return res.status(500).send(err);
             }
             else {
                 const { userid } = req.body;
+                console.log("req.body after upload", req.body);
                 if (!userid) return res.status(404).send("Userid not found");
-                console.log("req,body iiind", req.body)
-                
+
                 req.body.postMedia = [];
                 if (req.files && Array.isArray(req.files)) {
                     req.body.postMedia = req.files.map((file: any) => {
@@ -34,9 +32,8 @@ export const newPost = (req: Request, res: Response) => {
                 return SuccessResponse(res, {}, "");
             }
         })
-
-        // res.st
     } catch (error) {
+        console.log("new post error-->", error);
         return InternalError(res)
     }
 }
