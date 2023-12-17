@@ -5,9 +5,14 @@ import { environmentConfig } from "./constants/index";
 import { Request, Response } from 'express'
 import userRoutes from './routes/user.routes';
 import postRoutes from './routes/post.routes';
+import path from 'path';
 const app = express();
 
-app.use(express.json())
+app.use(express.json());
+
+// app.use('/images', express.static('./uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.use((req: Request, res: Response, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
